@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="urban_transport_orel" target="1.5" />
+      <module name="urban_transport_orel" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
