@@ -1,62 +1,45 @@
 package by.grsu.orel.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Transient;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-@Table(name = "user")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private int id;
+    private Long id;
 
-    @Column(name = "email", nullable = false, unique = true)
-    @Email(message = "Please provide a valid e-mail")
-    @NotEmpty(message = "Please provide an e-mail")
-    private String email;
-
-    @Column(name = "password")
-    @Transient
+    private String username;
     private String password;
 
-    @Column(name = "first_name")
-    @NotEmpty(message = "Please provide your first name")
-    private String firstName;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
-    @Column(name = "last_name")
-    @NotEmpty(message = "Please provide your last name")
-    private String lastName;
-
-    @Column(name = "enabled")
-    private boolean enabled;
-
-    @Column(name = "confirmation_token")
-    private String confirmationToken;
-
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public User() {
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -67,35 +50,21 @@ public class User {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean value) {
-        this.enabled = value;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + "*********" + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

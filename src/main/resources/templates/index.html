@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
 <head>
-
     <meta charset="UTF-8">
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Routes in real time</title>
 
+    <!-- Leaflet -->
     <link rel="stylesheet" th:href="@{/leaflet/leaflet.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
-
 </head>
 
 
 <body>
-
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script type="text/javascript" th:src="@{/leaflet/leaflet.js}"></script>
 
@@ -27,11 +24,6 @@
 
 <script th:inline="javascript">
 
-    // /*<![CDATA[*/
-    // document.write(/*[[${x}]]*/);
-    // /*]]>*/
-    //
-    // document.write([[${x}]]);
 
     var map = L.map('mapid').setView([53.716736, 23.840114], 14);
     loginLink = '<a href="/login">Login</a>';

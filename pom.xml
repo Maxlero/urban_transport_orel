@@ -34,12 +34,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <!-- JPA Data (We are going to use Repositories, Entities, Hibernate, etc...) -->
+        <!-- hot swapping, disable cache for template, enable live reload -->
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
-        <!-- Use MySQL Connector-J -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -47,35 +60,34 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.nulab-inc</groupId>
-            <artifactId>zxcvbn</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.nekohtml</groupId>
-            <artifactId>nekohtml</artifactId>
-            <version>1.9.21</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Bootstrap && Font Awesome -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>4.0.0-1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>5.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
         </dependency>
     </dependencies>
 
@@ -89,16 +101,16 @@
     </build>
 
     <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>spring-releases</id>-->
-            <!--<url>https://repo.spring.io/libs-release</url>-->
-        <!--</repository>-->
+    <!--<repository>-->
+    <!--<id>spring-releases</id>-->
+    <!--<url>https://repo.spring.io/libs-release</url>-->
+    <!--</repository>-->
     <!--</repositories>-->
     <!--<pluginRepositories>-->
-        <!--<pluginRepository>-->
-            <!--<id>spring-releases</id>-->
-            <!--<url>https://repo.spring.io/libs-release</url>-->
-        <!--</pluginRepository>-->
+    <!--<pluginRepository>-->
+    <!--<id>spring-releases</id>-->
+    <!--<url>https://repo.spring.io/libs-release</url>-->
+    <!--</pluginRepository>-->
     <!--</pluginRepositories>-->
 
 </project>
