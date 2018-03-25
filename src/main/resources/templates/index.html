@@ -23,10 +23,20 @@
 <div id="mapid"></div>
 
 <script th:inline="javascript">
+    /*<![CDATA[*/
+    var authorized = /*[[${authorized}]]*/ 'false';
+    console.log(authorized);
+    /*]]>*/
 
 
     var map = L.map('mapid').setView([53.716736, 23.840114], 14);
-    loginLink = '<a href="/login">Login</a>';
+
+    if (authorized) {
+        loginLink = '<a href="/manage">Manage</a>';
+    } else {
+        loginLink = '<a href="/login">Login</a>';
+    }
+
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: loginLink,

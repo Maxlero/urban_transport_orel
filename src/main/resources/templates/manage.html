@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Login</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
+
+    <!-- FA 5 -->
+    <link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
+
+    <!-- MY STYLES -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+
+<body>
+
+
+<p>Hi, secure page</p>
+
+
+<div th:unless="${authorized}">
+    <a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>
+</div>
+
+<div class="authenticated" th:if="${authorized}">
+    <div class="greeting">
+        <span th:text="${account.username}"></span>,
+        <span>hi!</span>
+    </div>
+    <a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>
+</div>
+
+
+</body>
+</html>
