@@ -71,17 +71,17 @@
 
 
 
-<div th:unless="${authorized}">
-    <a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>
-</div>
+<!--<div th:unless="${authorized}">-->
+    <!--<a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>-->
+<!--</div>-->
 
-<div class="authenticated" th:if="${authorized}">
-    <div class="greeting">
-        <span th:text="${account.username}"></span>,
-        <span>hi!</span>
-    </div>
-    <a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>
-</div>
+<!--<div class="authenticated" th:if="${authorized}">-->
+    <!--<div class="greeting">-->
+        <!--<span th:text="${account.username}"></span>,-->
+        <!--<span>hi!</span>-->
+    <!--</div>-->
+    <!--<a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>-->
+<!--</div>-->
 
 
 </body>

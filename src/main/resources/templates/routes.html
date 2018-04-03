@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<title>Routes</title>
+
+	<!-- Bootstrap 4 -->
+	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
+
+	<!-- FA 5 -->
+	<link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
+
+	<!-- MY STYLES -->
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+
+<body>
+
+<section id="routes">
+	<div class="route-table">
+
+
+		<!--<p>Routes page</p>-->
+		<div class="text-center text-uppercase form-group">ROUTES CONTROL PAGE</div>
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th scope="col" style="width: 2%">#</th>
+				<th scope="col" style="width: 84%">Route name</th>
+				<th scope="col" style="width: 7%">Delete</th>
+				<th scope="col" style="width: 7%">Update</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="obj : ${routes}">
+				<th scope="row" th:text="${obj.id}"></th>
+				<td th:text="${obj.name}"></td>
+				<td>
+					<button type="button" class="btn btn-outline-danger btn-md" disabled>delete Route</button>
+				</td>
+				<td>
+					<button type="button" class="btn btn-outline-warning btn-md" disabled>edit Route</button>
+				</td>
+			</tr>
+			<tr>
+				<!--<td>-->
+					<!--<button type="button" class="btn btn-primary btn-sm">Small button</button>-->
+				<!--</td>-->
+				<th scope="row"></th>
+				<td></td>
+				<td></td>
+				<td>
+					<a href="/addRoute" class="btn btn-outline-success btn-md">New Route</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+	</div>
+</section>
+
+
+<!--<div th:each="obj : ${routes}">-->
+<!--<div th:text="${obj.getId()}"></div>-->
+<!--<div th:text="${obj.getName()}"></div>-->
+<!--<div th:text="${obj.getRoute()}"></div>-->
+<!--<div th:text="${obj.getRoutes()}"></div>-->
+<!--<br>-->
+<!--</div>-->
+
+<!--<div th:each="obj : ${routes}">-->
+<!--<div th:each="route : ${obj.getRoutes()}">-->
+<!--<div th:text="${route.isStop()}"></div>-->
+<!--<div th:text="${route.getNormalTime()}"></div>-->
+<!--<div th:text="${route.getX()}"></div>-->
+<!--<div th:text="${route.getY()}"></div>-->
+<!--</div>-->
+<!--<br>-->
+<!--</div>-->
+
+
+<!--<div th:unless="${authorized}">-->
+<!--<a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>-->
+<!--</div>-->
+
+<!--<div class="authenticated" th:if="${authorized}">-->
+<!--<div class="greeting">-->
+<!--<span th:text="${account.username}"></span>,-->
+<!--<span>hi!</span>-->
+<!--</div>-->
+<!--<a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>-->
+<!--</div>-->
+
+
+</body>
+</html>
