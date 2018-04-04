@@ -17,8 +17,8 @@ L.Marker.MovingMarker = L.Marker.extend({
     },
 
     options: {
-        autostart: false,
-        loop: false,
+        autostart: true,
+        loop: false
     },
 
     initialize: function (latlngs, durations, options) {
