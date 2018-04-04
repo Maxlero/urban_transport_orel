@@ -23,162 +23,161 @@
 <!--https://github.com/ewoken/Leaflet.MovingMarker-->
 <!-- <script type="text/javascript" th:src="@{/js/MovingMarker.js}"></script> -->
 <script src="../static/js/MovingMarker.js"></script>
-<!--<script src="../static/js/jquery-3.3.1.min.js"></script>-->
 
 <div id="mapid"></div>
 
 <!-- <script th:inline="javascript"> -->
 <script>
-    var t = getCurrentTimeMilliSeconds();
-    // console.log(t);
-    t = 38258000;
-    console.log(t);
-
-    var stop_time = 4000;
-
-    var route1 = [
+    var input_jsonArray = [[
         {"time": 38253000, "stop": true, "x": 53.716736, "y": 23.840114},
         {"time": 38260000, "stop": true, "x": 53.7226756192, "y": 23.8445409508},
         {"time": 38265000, "stop": false, "x": 53.73, "y": 23.85},
-        {"time": 38270000, "stop": false, "x": 53.72, "y": 23.87}];
-    console.log(route1);
+        {"time": 38270000, "stop": false, "x": 53.72, "y": 23.87}], []];
 
-    var route2 = updateRoute(route1);
-    console.log(route2);
+    // GLOBAL CONST
+    var stop_time = 4000;
 
-    var route3 = constructRouteFromCurrentLocation(route2, t);
-    console.log(route3);
+    /*<![CDATA[*/
+    var authorized = /*[[${authorized}]]*/ 'false';
+    // console.log(authorized);
+    /*]]>*/
 
-
-    if (route3) {
-        var temp = constructFinalRoute(route3);
-        var final_route = temp[0];
-        var final_time = temp[1];
-        console.log(final_route);
-        console.log(final_time);
-    }
-
-
+    // SHOW MAP
     var map = L.map('mapid').setView([53.716736, 23.840114], 14);
-    loginLink = '<a href="/manage">Manage</a>';
+    if (authorized) {
+        loginLink = '<a href="/routes">Manage</a>';
+    } else {
+        loginLink = '<a href="/login">Login</a>';
+    }
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: loginLink,
             maxZoom: 18
         }).addTo(map);
 
+    // REAL TIME
+    var t = getCurrentTimeMilliSeconds();
+    // console.log(t);
+    // debug
+    t = 38258000;
+    console.log(t);
 
-    L.polyline(final_route).addTo(map);
+    // debug
+    var route = [
+        {"time": 38253000, "stop": true, "x": 53.716736, "y": 23.840114},
+        {"time": 38260000, "stop": true, "x": 53.7226756192, "y": 23.8445409508},
+        {"time": 38265000, "stop": false, "x": 53.73, "y": 23.85},
+        {"time": 38270000, "stop": false, "x": 53.72, "y": 23.87}];
+    console.log(route);
 
-    var marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
+    showRoute(route);
 
-    marker1.once('click', function () {
-        marker1.start();
-        marker1.closePopup();
-        marker1.unbindPopup();
-        marker1.on('click', function () {
-            if (marker1.isRunning()) {
-                marker1.pause();
-            } else {
-                marker1.start();
-            }
-        });
-        setTimeout(function () {
-            marker1.bindPopup('<b>Click me to pause !</b>').openPopup();
-        }, 2000);
-    });
+    function showRoute(route) {
 
-    marker1.bindPopup('<b>Click me to start !</b>', {closeOnClick: false});
-    marker1.openPopup();
+        var route2 = updateRoute(route);
+        // console.log(route2);
 
-    function getCurrentTimeMilliSeconds() {
-        var currentdate = new Date();
-        var CurrentTimeSeconds = currentdate.getHours() * 3600 +
-            +currentdate.getMinutes() * 60 +
-            +currentdate.getSeconds();
-        return CurrentTimeSeconds * 1000;
-    }
+        var route3 = constructRouteFromCurrentLocation(route2, t);
+        // console.log(route3);
 
-    function updateRoute(route) {
-        var returnRoute = [];
-        route.forEach(function (element, i) {
-            if (element.stop && i !== 0) {
-                returnRoute.push({
-                    "time": element.time - stop_time,
-                    "stop": element.stop,
-                    "x": element.x,
-                    "y": element.y
-                });
-                returnRoute.push(element);
-            } else {
-                returnRoute.push(element);
-            }
-        });
-        return returnRoute;
-    }
+        if (route3) {
+            var temp = constructFinalRoute(route3);
+            var final_route = temp[0];
+            var final_time = temp[1];
+            // console.log(final_route);
+            // console.log(final_time);
 
-    function constructRouteFromCurrentLocation(route, time) {
-        var mark = false;
-        var returnRoute = [];
+            L.polyline(final_route).addTo(map);
+            var marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
+        }
 
-        for (var i = 0; i < route.length - 1; i++) {
-            if (mark) {
-                returnRoute.push(route[i]);
-            } else {
-                if (route[i].time <= time && route[i + 1].time >= time) {
-                    mark = true;
-                    if (route[i + 1].time === time) {
-                        // returnRoute.push(route[i + 1]);
-                    } else if (route[i].time === time) {
-                        returnRoute.push(route[i]);
-                    } else {
-                        var timeDifference = route[i + 1].time - time;
-                        var part = timeDifference / (route[i + 1].time - route[i].time);
-                        var x = (route[i + 1].x - route[i].x) * part + route[i].x;
-                        var y = (route[i + 1].y - route[i].y) * part + route[i].y;
+        function updateRoute(route) {
+            var returnRoute = [];
+            route.forEach(function (element, i) {
+                if (element.stop && i !== 0) {
+                    returnRoute.push({
+                        "time": element.time - stop_time,
+                        "stop": element.stop,
+                        "x": element.x,
+                        "y": element.y
+                    });
+                    returnRoute.push(element);
+                } else {
+                    returnRoute.push(element);
+                }
+            });
+            return returnRoute;
+        }
 
-                        // console.log(timeDifference);
-                        // console.log(part);
-                        console.log(x);
-                        console.log(y);
+        function constructRouteFromCurrentLocation(route, time) {
+            var mark = false;
+            var returnRoute = [];
 
-                        returnRoute.push({
-                            "time": time,
-                            "stop": false,
-                            "x": x,
-                            "y": y
-                        });
+            for (var i = 0; i < route.length - 1; i++) {
+                if (mark) {
+                    returnRoute.push(route[i]);
+                } else {
+                    if (route[i].time <= time && route[i + 1].time >= time) {
+                        mark = true;
+                        if (route[i + 1].time === time) {
+                            // returnRoute.push(route[i + 1]);
+                        } else if (route[i].time === time) {
+                            returnRoute.push(route[i]);
+                        } else {
+                            var timeDifference = route[i + 1].time - time;
+                            var part = timeDifference / (route[i + 1].time - route[i].time);
+                            var x = (route[i + 1].x - route[i].x) * part + route[i].x;
+                            var y = (route[i + 1].y - route[i].y) * part + route[i].y;
+
+                            // console.log(timeDifference);
+                            // console.log(part);
+                            console.log(x);
+                            console.log(y);
+
+                            returnRoute.push({
+                                "time": time,
+                                "stop": false,
+                                "x": x,
+                                "y": y
+                            });
+                        }
                     }
                 }
             }
-        }
-        if (mark && returnRoute.length) {
-            returnRoute.push(route[route.length - 1]);
+            if (mark && returnRoute.length) {
+                returnRoute.push(route[route.length - 1]);
+            }
+
+            if (returnRoute.length) {
+                console.log("Everything is okay with route, don't panic");
+                return returnRoute;
+            } else {
+                console.log("Route is not in the appropriate time interval");
+                return null;
+            }
         }
 
-        if (returnRoute.length) {
-            console.log("ok");
-            return returnRoute;
-        } else {
-            console.log("route is not in the appropriate time interval");
-            return null;
+        function constructFinalRoute(jsonRoute) {
+            var route = [];
+            var time = [];
+
+            for (var i = 0; i < jsonRoute.length - 1; i++) {
+                route.push([jsonRoute[i].x, jsonRoute[i].y]);
+                time.push(jsonRoute[i + 1].time - jsonRoute[i].time);
+            }
+            route.push([jsonRoute[route.length].x, jsonRoute[route.length].y]);
+
+            return [route, time];
         }
     }
 
-
-    function constructFinalRoute(jsonRoute) {
-        var route = [];
-        var time = [];
-
-        for (var i = 0; i < jsonRoute.length - 1; i++) {
-            route.push([jsonRoute[i].x, jsonRoute[i].y]);
-            time.push(jsonRoute[i + 1].time - jsonRoute[i].time);
-        }
-        route.push([jsonRoute[route.length].x, jsonRoute[route.length].y]);
-
-        return [route, time];
+    function getCurrentTimeMilliSeconds() {
+        var currentDate = new Date();
+        var CurrentTimeSeconds = currentDate.getHours() * 3600 +
+            +currentDate.getMinutes() * 60 +
+            +currentDate.getSeconds();
+        return CurrentTimeSeconds * 1000;
     }
-
 
 </script>
 </body>

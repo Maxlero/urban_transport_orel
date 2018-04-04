@@ -56,12 +56,12 @@ public class RoutesController {
 //		logger.info(gson.toJson(mmm, Route[].class));
 
 		Iterable<Routes> routesObject = routeRepository.findAll();
+		model.addAttribute("routes", routesObject);
 
 //		for (Routes r : routesObject) {
 //			logger.info(r);
 //		}
 
-		model.addAttribute("routes", routesObject);
 
 
 		return "routes";
