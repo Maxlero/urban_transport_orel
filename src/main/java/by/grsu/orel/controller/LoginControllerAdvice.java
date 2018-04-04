@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
 public class LoginControllerAdvice {
+
     @Autowired
     private UserRepository userRepository;
 

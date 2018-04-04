@@ -25,9 +25,8 @@
 <section id="routes">
 	<div class="route-table">
 
-
-		<!--<p>Routes page</p>-->
 		<div class="text-center text-uppercase form-group">ROUTES CONTROL PAGE</div>
+
 		<table class="table table-hover">
 			<thead>
 			<tr>
@@ -37,21 +36,23 @@
 				<th scope="col" style="width: 7%">Update</th>
 			</tr>
 			</thead>
+
 			<tbody>
 			<tr th:each="obj : ${routes}">
 				<th scope="row" th:text="${obj.id}"></th>
 				<td th:text="${obj.name}"></td>
 				<td>
-					<button type="button" class="btn btn-outline-danger btn-md" disabled>delete Route</button>
+					<form th:action="@{/routes}" method="post">
+						<input type="hidden" name="id" th:value="${obj.id}"/>
+						<input type="submit" class="btn btn-outline-danger btn-md"
+							   value="delete Route">
+					</form>
 				</td>
 				<td>
 					<button type="button" class="btn btn-outline-warning btn-md" disabled>edit Route</button>
 				</td>
 			</tr>
 			<tr>
-				<!--<td>-->
-					<!--<button type="button" class="btn btn-primary btn-sm">Small button</button>-->
-				<!--</td>-->
 				<th scope="row"></th>
 				<td></td>
 				<td></td>
@@ -60,6 +61,7 @@
 				</td>
 			</tr>
 			</tbody>
+
 		</table>
 
 	</div>

@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RouteRepository extends CrudRepository<Routes, Long> {
 	Routes findById(int id);
-	Void deleteRoutesById(int id);
+	Void deleteRoutesById(Long id);
 	Void deleteRoutesByName(int name);
 }

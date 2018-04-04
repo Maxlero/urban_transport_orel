@@ -35,7 +35,7 @@ public class UserRegistrationController {
 	public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
 									  BindingResult result) {
 
-		User existing = userService.findByUsername(userDto.getUsername()	);
+		User existing = userService.findByUsername(userDto.getUsername());
 		if (existing != null) {
 			result.rejectValue("username", null, "That username is taken. Try another.");
 		}

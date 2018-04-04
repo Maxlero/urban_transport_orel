@@ -31,7 +31,7 @@
 <script>
     var t = getCurrentTimeMilliSeconds();
     // console.log(t);
-    t = 38256000;
+    t = 38258000;
     console.log(t);
 
     var stop_time = 4000;
@@ -68,17 +68,6 @@
         }).addTo(map);
 
 
-    var route = [
-        [53.716736, 23.840114],
-        [53.7226756192, 23.8445409508],
-        [53.7226756192, 23.8445409508],
-        [53.73, 23.85],
-        [53.72, 23.87]
-    ];
-    console.log(route);
-    console.log(final_route);
-    console.log(final_time);
-
     L.polyline(final_route).addTo(map);
 
     var marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
@@ -107,10 +96,6 @@
         var CurrentTimeSeconds = currentdate.getHours() * 3600 +
             +currentdate.getMinutes() * 60 +
             +currentdate.getSeconds();
-        // console.log(currentdate.getHours());
-        // console.log(currentdate.getMinutes());
-        // console.log(currentdate.getSeconds());
-        // console.log(CurrentTimeSeconds);
         return CurrentTimeSeconds * 1000;
     }
 
@@ -172,7 +157,6 @@
         }
 
         if (returnRoute.length) {
-            // console.log(returnRoute);
             console.log("ok");
             return returnRoute;
         } else {
