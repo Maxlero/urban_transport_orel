@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet.Snap.Stirenoooo)</title>
+
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/leaflet.draw.css">
+
+    <script src="js/leaflet.js"></script>
+    <script src="js/leaflet.draw.js"></script>
+    <script src="js/leaflet.geometryutil.js"></script>
+
+    <script src="js/leaflet.snap.js"></script>
+    <style>
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .leaflet-editing-icon.marker-snapped {
+            background-color: yellow;
+        }
+
+        .leaflet-marker-icon.marker-snapped {
+            content: url('js/images/marker-snap.png');
+        }
+
+        .leaflet-draw-edit-edit,
+        .leaflet-draw-draw-circle,
+        .leaflet-draw-draw-rectangle,
+        .leaflet-draw-draw-polygon {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="leaflet-dragging">
+
+<div id="map" tabindex="0"></div>
+
+<script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+<script src="./js/Leaflet.Draw.Event.js"></script>
+<script type="text/javascript">
+    var markers = [];
+    var routes = [];
+    var guideLayers = [];
+    var dimasik = [];
+
+    var map = L.map('map', {})
+        .setView([53.68115363918673, 23.83380889892578], 13)
+        .addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
+
+    drawnItems = L.featureGroup().addTo(map);
+    map.addControl(new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    }));
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+
+        dimasik.push(event.layer);
+
+        // console.log(dimasik);
+
+        dimasik.forEach(function (el) {
+            dimasik.forEach(function (value) {
+                if (el.snapediting !== undefined) {
+                    el.snapediting._guides = [];
+                    el.snapediting.addGuideLayer(value);
+                }
+            });
+        });
+
+        drawnItems.addLayer(layer);
+    });
+
+    map.on(L.Draw.Event.DELETED, function (e) {
+        console.log(dimasik);
+
+        // console.log(e.layers._layers);
+
+        var temp = [];
+        dimasik.forEach(function (value) {
+            // console.log(value._leaflet_id);
+            // console.log(e.layers);
+
+            var fooo = true;
+
+            for (var a in e.layers._layers) {
+                if (value._leaflet_id === e.layers._layers[a]._leaflet_id) {
+                    fooo = false;
+                }
+            }
+
+            if (fooo) {
+                temp.push(value);
+            }
+        });
+
+        dimasik = temp;
+
+        dimasik.forEach(function (el) {
+            dimasik.forEach(function (value) {
+                if (el.snapediting !== undefined) {
+                    el.snapediting._guides = [];
+                    el.snapediting.addGuideLayer(value);
+                }
+            });
+        });
+
+    });
+
+    map.on(L.Draw.Event.CREATED, function (e) {
+        console.log(dimasik);
+        var layer = e.layer;
+        map.addLayer(layer);
+        guideLayers.push(layer);
+
+        // console.log($('.leaflet-marker-pane'));
+
+        if (e.layerType === "marker") {
+            // markers.push(layer);
+            // console.log(markers);
+
+            layer.snapediting = new L.Handler.MarkerSnap(map, layer);
+            layer.snapediting.enable();
+
+            for (var a in guideLayers) {
+                layer.snapediting.addGuideLayer(guideLayers[a]);
+            }
+        } else if (e.layerType === "polyline") {
+            // routes.push(layer);
+            // console.log(routes);
+
+            layer.options.fillOpacity = 1;
+            layer.options.opacity = 1;
+            layer.options.color = '#' + (function co(lor) {
+                return (lor += [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'][Math.floor(Math.random() * 16)]) && (lor.length === 6) ? lor : co(lor);
+            })('');
+
+            layer.snapediting = new L.Handler.PolylineSnap(map, layer);
+            layer.snapediting.enable();
+
+            // markers.forEach(function (el) {
+            //     dimasik.forEach(function (value) {
+            //         el.snapediting.addGuideLayer(value);
+            //     });
+            // });
+        }
+
+    });
+
+
+    // $(function() {
+    //     $(this).bind("contextmenu", function(e) {
+    //         e.preventDefault();
+    //     });
+    // });
+
+    // var popup = L.popup();
+    // function onMapClick(e) {
+    // popup2
+    //     .setLatLng(e.latlng)
+    //     .setContent("You clicked the map at " + e.latlng.toString())
+    //     .openOn(map);
+    // }
+    // map.on('click', onMapClick);
+
+</script>
+</body>
+</html>

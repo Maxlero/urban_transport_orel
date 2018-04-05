@@ -23,6 +23,7 @@
 <div id="mapid"></div>
 
 <script th:inline="javascript">
+
     /*<![CDATA[*/
     var routes = /*[[${routes}]]*/ 'false';
     // console.log(routes);
@@ -59,7 +60,7 @@
 
     if (routes) {
         // console.log("yes");
-        for (var i = 0; i < routes.length - 1; i++) {
+        for (var i = 0; i < routes.length; i++) {
             // console.log(routes[i].name);
             if (routes[i].name === "do not delete") {
                 // console.log(routes[i].route);
