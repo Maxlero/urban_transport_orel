@@ -13,6 +13,8 @@
 	<link rel="stylesheet" th:href="@{/leaflet/leaflet.draw.css}">
 	<!--MINE-->
 	<link rel="stylesheet" th:href="@{/css/index.css}">
+	<!--EasyButton-->
+	<link rel="stylesheet" th:href="@{/css/easy-button.css}">
 
 	<!--<link rel="stylesheet" href="css/leaflet.css">-->
 	<!--<link rel="stylesheet" href="css/leaflet.draw.css">-->
@@ -32,6 +34,24 @@
 	<!--<script src="js/leaflet.draw.js"></script>-->
 	<!--<script src="js/leaflet.geometryutil.js"></script>-->
 	<!--<script src="js/leaflet.snap.js"></script>-->
+
+	<!-- Bootstrap 4 -->
+	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
+
+	<!-- FA 5 -->
+	<link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
+
+	<!--jQouery-->
+	<!--<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>-->
+
+	<!--EasyButton-->
+	<script type="text/javascript" th:src="@{/js/easy-button.js}"></script>
+
+	<style>
+		.leaflet-control-attribution {
+			display: none !important;
+		}
+	</style>
 </head>
 
 
@@ -44,6 +64,7 @@
 <!--<script src="./js/Leaflet.Draw.Event.js"></script>-->
 
 <script type="text/javascript">
+
     // var markers = [];
     // var routes = [];
     var guideLayers = [];
@@ -80,7 +101,7 @@
     });
 
     map.on(L.Draw.Event.DELETED, function (e) {
-        console.log(dimasikKarasik);
+        // console.log(dimasikKarasik);
 
         // console.log(e.layers._layers);
 
@@ -116,7 +137,7 @@
     });
 
     map.on(L.Draw.Event.CREATED, function (e) {
-        console.log(dimasikKarasik);
+        // console.log(dimasikKarasik);
         var layer = e.layer;
         map.addLayer(layer);
         guideLayers.push(layer);
@@ -156,21 +177,80 @@
     });
 
 
-    // $(function() {
-    //     $(this).bind("contextmenu", function(e) {
-    //         e.preventDefault();
-    //     });
-    // });
+    L.easyButton('fas fa-check', function (btn, map) {
+        myFunction();
+    }).addTo(map);
 
-    // var popup = L.popup();
-    // function onMapClick(e) {
-    // popup2
-    //     .setLatLng(e.latlng)
-    //     .setContent("You clicked the map at " + e.latlng.toString())
-    //     .openOn(map);
-    // }
-    // map.on('click', onMapClick);
+    function myFunction() {
+        // console.log(dimasikKarasik);
+        var returnRoute = [];
+
+        var temp_stops = [];
+        for (var z = 0; z < dimasikKarasik.length; z++) {
+            if (dimasikKarasik[z]._latlng) {
+                temp_stops.push([dimasikKarasik[z]._latlng.lat, dimasikKarasik[z]._latlng.lng]);
+            }
+        }
+        // console.log(temp_stops);
+
+        for (var i = 0; i < dimasikKarasik.length; i++) {
+            if (dimasikKarasik[i]._latlngs) {
+                dimasikKarasik[i]._latlngs.forEach(function (element, j) {
+                        if (j === 0) {
+                            returnRoute.push({
+                                "time": "",
+                                "stop": true,
+                                "x": element.lat,
+                                "y": element.lng
+                            });
+                        } else {
+                            var singFromTheSky = false;
+
+                            for (var k = 0; k < temp_stops.length; k++) {
+                                if (temp_stops[k][0] === element.lat && temp_stops[k][1] === element.lng) {
+                                    singFromTheSky = true;
+                                    returnRoute.push({
+                                        "time": "",
+                                        "stop": true,
+                                        "x": element.lat,
+                                        "y": element.lng
+                                    });
+                                    break;
+                                }
+                            }
+
+                            if (singFromTheSky === false) {
+                                returnRoute.push({
+                                    "time": "",
+                                    "stop": false,
+                                    "x": element.lat,
+                                    "y": element.lng
+                                });
+                            }
+
+                        }
+                    }
+                );
+                break;
+            }
+        }
+        console.log(returnRoute);
+    }
+
 
 </script>
+
+<!--<div th:unless="${authorized}">-->
+<!--<a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>-->
+<!--</div>-->
+
+<!--<div class="authenticated" th:if="${authorized}">-->
+<!--<div class="greeting">-->
+<!--<span th:text="${account.username}"></span>,-->
+<!--<span>hi!</span>-->
+<!--</div>-->
+<!--<a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>-->
+<!--</div>-->
+
 </body>
 </html>

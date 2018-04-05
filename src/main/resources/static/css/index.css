@@ -33,6 +33,6 @@ body {
 .leaflet-draw-draw-circle,
 .leaflet-draw-draw-rectangle,
 .leaflet-draw-draw-polygon,
-.leaflet-draw-actions-top{
+.leaflet-draw-actions-top {
 	display: none !important;
 }

@@ -43,7 +43,7 @@
     }
     L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: loginLink,
+            attribution: [loginLink, loginLink],
             maxZoom: 18
         }).addTo(map);
 
