@@ -1,14 +1,38 @@
 html {
-    height: 100%;
-    width: 100%
+	height: 100%;
+	width: 100%
 }
 
 body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
 }
 
 #mapid {
-    height: 100% !important;
+	height: 100% !important;
+}
+
+#map {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.leaflet-editing-icon.marker-snapped {
+	background-color: yellow;
+}
+
+.leaflet-marker-icon.marker-snapped {
+	content: url('../leaflet/images/marker-snap.png');
+}
+
+.leaflet-draw-edit-edit,
+.leaflet-draw-draw-circle,
+.leaflet-draw-draw-rectangle,
+.leaflet-draw-draw-polygon,
+.leaflet-draw-actions-top{
+	display: none !important;
 }
