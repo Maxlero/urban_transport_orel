@@ -42,7 +42,7 @@
 	<link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
 
 	<!--jQouery-->
-	<!--<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>-->
+	<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 
 	<!--EasyButton-->
 	<script type="text/javascript" th:src="@{/js/easy-button.js}"></script>
@@ -198,7 +198,7 @@
                 dimasikKarasik[i]._latlngs.forEach(function (element, j) {
                         if (j === 0) {
                             returnRoute.push({
-                                "time": "",
+                                "time": 0,
                                 "stop": true,
                                 "x": element.lat,
                                 "y": element.lng
@@ -210,7 +210,7 @@
                                 if (temp_stops[k][0] === element.lat && temp_stops[k][1] === element.lng) {
                                     singFromTheSky = true;
                                     returnRoute.push({
-                                        "time": "",
+                                        "time": 0,
                                         "stop": true,
                                         "x": element.lat,
                                         "y": element.lng
@@ -221,7 +221,7 @@
 
                             if (singFromTheSky === false) {
                                 returnRoute.push({
-                                    "time": "",
+                                    "time": 0,
                                     "stop": false,
                                     "x": element.lat,
                                     "y": element.lng
@@ -235,7 +235,33 @@
             }
         }
         console.log(returnRoute);
+        searchText();
     }
+
+
+    function searchText() {
+        var search = JSON.stringify({
+            pName: "bhanu",
+            lName: "prasad"
+        });
+
+        // Sending and receiving data in JSON format using POST method
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "add", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("what is that?");
+            }
+        };
+        xhr.send(search);
+    }
+
+
+    // $( document ).ready(function() {
+    //
+    // })
 
 
 </script>
