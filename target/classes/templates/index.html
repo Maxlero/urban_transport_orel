@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<meta charset="UTF-8">
+	<title>Routes in real time</title>
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" th:href="@{/leaflet/leaflet.css}">
+	<link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+
+
+<body>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script type="text/javascript" th:src="@{/leaflet/leaflet.js}"></script>
+
+<!--Moving marker-->
+<!--https://github.com/ewoken/Leaflet.MovingMarker-->
+<script type="text/javascript" th:src="@{/js/MovingMarker.js}"></script>
+
+<div id="mapid"></div>
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+    var routes = /*[[${routes}]]*/ 'false';
+    // console.log(routes);
+    /*]]>*/
+
+    /*<![CDATA[*/
+    var authorized = /*[[${authorized}]]*/ 'false';
+    // console.log(authorized);
+    /*]]>*/
+
+    // SHOW MAP
+    var map = L.map('mapid').setView([53.716736, 23.840114], 14);
+    if (authorized) {
+        loginLink = '<a href="/routes">Manage</a>';
+    } else {
+        loginLink = '<a href="/login">Login</a>';
+    }
+    L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: [loginLink, loginLink],
+            maxZoom: 18
+        }).addTo(map);
+
+
+    // GLOBAL CONST
+    var stop_time = 4000;
+
+    // REAL TIME
+    var t = getCurrentTimeMilliSeconds();
+    // console.log(t);
+    // debug
+    t = 38258000;
+    // console.log(t);
+
+    if (routes) {
+        // console.log("yes");
+        for (var i = 0; i < routes.length; i++) {
+            // console.log(routes[i].name);
+            if (routes[i].name === "do not delete") {
+                // console.log(routes[i].route);
+                var obj = JSON.parse(routes[i].route);
+                // console.log(obj);
+                showRoute(obj);
+            }
+        }
+    }
+
+    // showRoute(route);
+
+    function showRoute(route) {
+
+        var route2 = updateRoute(route);
+        // console.log(route2);
+
+        var route3 = constructRouteFromCurrentLocation(route2, t);
+        // console.log(route3);
+
+        if (route3) {
+            var temp = constructFinalRoute(route3);
+            var final_route = temp[0];
+            var final_time = temp[1];
+
+            L.polyline(final_route).addTo(map);
+            var marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
+        }
+
+        function updateRoute(route) {
+            var returnRoute = [];
+            route.forEach(function (element, i) {
+                if (element.stop && i !== 0) {
+                    returnRoute.push({
+                        "time": element.time - stop_time,
+                        "stop": element.stop,
+                        "x": element.x,
+                        "y": element.y
+                    });
+                    returnRoute.push(element);
+                } else {
+                    returnRoute.push(element);
+                }
+            });
+            return returnRoute;
+        }
+
+        function constructRouteFromCurrentLocation(route, time) {
+            var mark = false;
+            var returnRoute = [];
+
+            for (var i = 0; i < route.length - 1; i++) {
+                if (mark) {
+                    returnRoute.push(route[i]);
+                } else {
+                    if (route[i].time <= time && route[i + 1].time >= time) {
+                        mark = true;
+                        if (route[i + 1].time === time) {
+                            // returnRoute.push(route[i + 1]);
+                        } else if (route[i].time === time) {
+                            returnRoute.push(route[i]);
+                        } else {
+                            var timeDifference = route[i + 1].time - time;
+                            var part = timeDifference / (route[i + 1].time - route[i].time);
+                            var x = (route[i + 1].x - route[i].x) * part + route[i].x;
+                            var y = (route[i + 1].y - route[i].y) * part + route[i].y;
+
+                            // console.log(timeDifference);
+                            // console.log(part);
+                            // console.log(x);
+                            // console.log(y);
+
+                            returnRoute.push({
+                                "time": time,
+                                "stop": false,
+                                "x": x,
+                                "y": y
+                            });
+                        }
+                    }
+                }
+            }
+            if (mark && returnRoute.length) {
+                returnRoute.push(route[route.length - 1]);
+            }
+
+            if (returnRoute.length) {
+                console.log("Everything is okay with route, don't panic");
+                return returnRoute;
+            } else {
+                console.log("Route is not in the appropriate time interval");
+                return null;
+            }
+        }
+
+        function constructFinalRoute(jsonRoute) {
+            var route = [];
+            var time = [];
+
+            for (var i = 0; i < jsonRoute.length - 1; i++) {
+                route.push([jsonRoute[i].x, jsonRoute[i].y]);
+                time.push(jsonRoute[i + 1].time - jsonRoute[i].time);
+            }
+            route.push([jsonRoute[route.length].x, jsonRoute[route.length].y]);
+
+            return [route, time];
+        }
+    }
+
+    function getCurrentTimeMilliSeconds() {
+        var currentDate = new Date();
+        var CurrentTimeSeconds = currentDate.getHours() * 3600 +
+            +currentDate.getMinutes() * 60 +
+            +currentDate.getSeconds();
+        return CurrentTimeSeconds * 1000;
+    }
+
+    // /*<![CDATA[*/
+    // var authorized = /*[[${authorized}]]*/ 'false';
+    // console.log(authorized);
+    // /*]]>*/
+    //
+    //
+    // var map = L.map('mapid').setView([53.716736, 23.840114], 14);
+    //
+    // if (authorized) {
+    //     loginLink = '<a href="/manage">Manage</a>';
+    // } else {
+    //     loginLink = '<a href="/login">Login</a>';
+    // }
+    //
+    // L.tileLayer(
+    //     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //         attribution: loginLink,
+    //         maxZoom: 18
+    //     }).addTo(map);
+    //
+    //
+    // var marker = L.marker([53.716736, 23.840114]).addTo(map);
+    // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    //
+    // var circle = L.circle([53.73, 23.85], {
+    //     color: 'red',
+    //     fillColor: '#f03',
+    //     fillOpacity: 0.5,
+    //     radius: 500
+    // }).addTo(map);
+    //
+    // var parisKievLL = [
+    //     [53.716736, 23.840114],
+    //     [53.73, 23.85]
+    // ];
+    //
+    // var marker1 = L.Marker.movingMarker(parisKievLL, [10000]).addTo(map);
+    // L.polyline(parisKievLL).addTo(map);
+    // marker1.once('click', function () {
+    //     marker1.start();
+    //     marker1.closePopup();
+    //     marker1.unbindPopup();
+    //     marker1.on('click', function () {
+    //         if (marker1.isRunning()) {
+    //             marker1.pause();
+    //         } else {
+    //             marker1.start();
+    //         }
+    //     });
+    //     setTimeout(function () {
+    //         marker1.bindPopup('<b>Click me to pause !</b>').openPopup();
+    //     }, 2000);
+    // });
+    //
+    // marker1.bindPopup('<b>Click me to start !</b>', {closeOnClick: false});
+    // marker1.openPopup();
+</script>
+</body>
+</html>

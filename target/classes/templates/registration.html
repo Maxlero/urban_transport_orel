@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Create an account</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
+
+    <!-- FA 5 -->
+    <link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
+
+    <!-- MY STYLES -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+
+<body>
+
+<section id="register">
+    <div class="air-card">
+        <div class="form-content">
+            <div th:if="${param.success}">
+                <div class="alert alert-info">
+                    Ого. Успешная регистрация подъехала. Теперь вы можете сполна насладиться контентом данного
+                    сайта. Но это не точно...
+                </div>
+            </div>
+            <form th:action="@{/registration}" th:object="${user}" method="post">
+
+                <div class="text-center text-uppercase form-group">Sing Up</div>
+
+                <p class="error-message alert alert-warning"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Что-то пошло не так</p>
+
+
+                <div class="form-group">
+                    <label for="username">Choose your username:</label>
+                    <input type="text" class="form-control" autofocus="autofocus"
+                           th:classappend="${#fields.hasErrors('username')}? 'is-invalid':''"
+                           th:field="*{username}" id="username" required>
+                    <div class="invalid-feedback" th:each="error: ${#fields.errors('username')}"
+                         th:text="${error}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Create a password:</label>
+                    <input type="password" class="form-control"
+                           th:classappend="${#fields.hasErrors('password')}?'is-invalid':''"
+                           th:field="*{password}" id="password" required>
+                    <div class="invalid-feedback" th:each="error:${#fields.errors('password')}"
+                         th:text="${error}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm your password:</label>
+                    <input type="password" class="form-control"
+                           th:classappend="${#fields.hasErrors('confirmPassword')}?'is-invalid':''"
+                           th:field="*{confirmPassword}" id="confirmPassword" required>
+                    <div class="invalid-feedback" th:each="error:${#fields.errors('confirmPassword')}"
+                         th:text="${error}">
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" th:classappend="${#fields.hasErrors('terms')}? 'is-invalid':''"
+                           value="" id="terms" required="" type="checkbox" th:field="*{terms}">
+                    <label class="form-check-label" for="terms">
+                        I'm agree with <a href="#">rules</a>
+                    </label>
+                    <div class="invalid-feedback"
+                         th:each="error:${#fields.errors('terms')}"
+                         th:text="${error}">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-md btn-block">Done</button>
+                <div class="form-group text-center mt-3">
+                    <span>Already have one? <a href="/" th:href="@{/login}">Login here</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<!--<div th:fragment="scripts">-->
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">-->
+
+    <!--<script type="text/javascript" src="webjars/jquery/3.0.0/jquery.min.js"></script>-->
+    <!--<script type="text/javascript" src="webjars/popper.js/1.12.9-1/popper.min.js"></script>-->
+    <!--<script type="text/javascript" th:href="@{/js/bootstrap.min.js}"></script>-->
+<!--</div>-->
+
+</body>
+</html>

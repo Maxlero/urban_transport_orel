@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Login</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
+
+    <!-- FA 5 -->
+    <link rel="stylesheet" href="webjars/font-awesome/5.0.6/web-fonts-with-css/css/fontawesome-all.min.css"/>
+
+    <!-- MY STYLES -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+
+<body>
+
+<section id="auth">
+    <div class="air-card">
+        <div class="auth-form-container">
+            <div class="auth-form">
+
+                <div class="form-content">
+                    <form th:action="@{/login}" method="post">
+
+                        <div class="text-center text-uppercase form-group">Log in and get to work</div>
+
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                Invalid username or password.
+                            </div>
+                        </div>
+                        <div th:if="${param.logout}">
+                            <div class="alert alert-info">
+                                You have been logged out.
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" autofocus="autofocus"
+                                   placeholder="Login" aria-label="Username" aria-describedby="username">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input type="password" id="password" name="password" class="form-control"
+                                   placeholder="Password"
+                                   aria-label="Username" aria-describedby="password">
+                        </div>
+                        <button type="submit" name="login-submit" id="login-submit"
+                                class="btn btn-md btn-block pad-auth-btn btn-success">Enter
+                        </button>
+
+                        <div class="form-group text-center mt-3 no-bottom">
+                            <span>Have no account? <a href="/" th:href="@{/registration}">Register</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!--<div th:unless="${authorized}">-->
+    <!--<a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>-->
+<!--</div>-->
+
+<!--<div class="authenticated" th:if="${authorized}">-->
+    <!--<div class="greeting">-->
+        <!--<span th:text="${account.username}"></span>,-->
+        <!--<span>hi!</span>-->
+    <!--</div>-->
+    <!--<a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>-->
+<!--</div>-->
+
+
+</body>
+</html>

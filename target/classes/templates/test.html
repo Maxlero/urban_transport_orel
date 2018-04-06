@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<meta charset="UTF-8">
+	<title>Routes in real time</title>
+
+	<!-- Leaflet -->
+	<!-- <link rel="stylesheet" th:href="@{/leaflet/leaflet.css}"> -->
+	<!-- <link rel="stylesheet" th:href="@{/css/index.css}"> -->
+	<link rel="stylesheet" type="text/css" href="../static/leaflet/leaflet.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+</head>
+
+
+<body>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<!-- <script type="text/javascript" th:src="@{/leaflet/leaflet.js}"></script> -->
+<script src="../static/leaflet/leaflet.js"></script>
+
+<!--Moving marker-->
+<!--https://github.com/ewoken/Leaflet.MovingMarker-->
+<!-- <script type="text/javascript" th:src="@{/js/MovingMarker.js}"></script> -->
+<script src="../static/js/MovingMarker.js"></script>
+
+<div id="mapid"></div>
+
+<!-- <script th:inline="javascript"> -->
+<script>
+    var input_jsonArray = [[
+        {"time": 38253000, "stop": true, "x": 53.716736, "y": 23.840114},
+        {"time": 38260000, "stop": true, "x": 53.7226756192, "y": 23.8445409508},
+        {"time": 38265000, "stop": false, "x": 53.73, "y": 23.85},
+        {"time": 38270000, "stop": false, "x": 53.72, "y": 23.87}], []];
+
+    // GLOBAL CONST
+    var stop_time = 4000;
+
+    /*<![CDATA[*/
+    var authorized = /*[[${authorized}]]*/ 'false';
+    // console.log(authorized);
+    /*]]>*/
+
+    // SHOW MAP
+    var map = L.map('mapid').setView([53.716736, 23.840114], 14);
+    if (authorized) {
+        loginLink = '<a href="/routes">Manage</a>';
+    } else {
+        loginLink = '<a href="/login">Login</a>';
+    }
+    L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: loginLink,
+            maxZoom: 18
+        }).addTo(map);
+
+    // REAL TIME
+    var t = getCurrentTimeMilliSeconds();
+    // console.log(t);
+    // debug
+    t = 38258000;
+    console.log(t);
+
+    // debug
+    var route = [
+        {"time": 38253000, "stop": true, "x": 53.716736, "y": 23.840114},
+        {"time": 38260000, "stop": true, "x": 53.7226756192, "y": 23.8445409508},
+        {"time": 38265000, "stop": false, "x": 53.73, "y": 23.85},
+        {"time": 38270000, "stop": false, "x": 53.72, "y": 23.87}];
+    console.log(route);
+
+    showRoute(route);
+
+    function showRoute(route) {
+
+        var route2 = updateRoute(route);
+        // console.log(route2);
+
+        var route3 = constructRouteFromCurrentLocation(route2, t);
+        // console.log(route3);
+
+        if (route3) {
+            var temp = constructFinalRoute(route3);
+            var final_route = temp[0];
+            var final_time = temp[1];
+            // console.log(final_route);
+            // console.log(final_time);
+
+            L.polyline(final_route).addTo(map);
+            var marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
+        }
+
+        function updateRoute(route) {
+            var returnRoute = [];
+            route.forEach(function (element, i) {
+                if (element.stop && i !== 0) {
+                    returnRoute.push({
+                        "time": element.time - stop_time,
+                        "stop": element.stop,
+                        "x": element.x,
+                        "y": element.y
+                    });
+                    returnRoute.push(element);
+                } else {
+                    returnRoute.push(element);
+                }
+            });
+            return returnRoute;
+        }
+
+        function constructRouteFromCurrentLocation(route, time) {
+            var mark = false;
+            var returnRoute = [];
+
+            for (var i = 0; i < route.length - 1; i++) {
+                if (mark) {
+                    returnRoute.push(route[i]);
+                } else {
+                    if (route[i].time <= time && route[i + 1].time >= time) {
+                        mark = true;
+                        if (route[i + 1].time === time) {
+                            // returnRoute.push(route[i + 1]);
+                        } else if (route[i].time === time) {
+                            returnRoute.push(route[i]);
+                        } else {
+                            var timeDifference = route[i + 1].time - time;
+                            var part = timeDifference / (route[i + 1].time - route[i].time);
+                            var x = (route[i + 1].x - route[i].x) * part + route[i].x;
+                            var y = (route[i + 1].y - route[i].y) * part + route[i].y;
+
+                            // console.log(timeDifference);
+                            // console.log(part);
+                            console.log(x);
+                            console.log(y);
+
+                            returnRoute.push({
+                                "time": time,
+                                "stop": false,
+                                "x": x,
+                                "y": y
+                            });
+                        }
+                    }
+                }
+            }
+            if (mark && returnRoute.length) {
+                returnRoute.push(route[route.length - 1]);
+            }
+
+            if (returnRoute.length) {
+                console.log("Everything is okay with route, don't panic");
+                return returnRoute;
+            } else {
+                console.log("Route is not in the appropriate time interval");
+                return null;
+            }
+        }
+
+        function constructFinalRoute(jsonRoute) {
+            var route = [];
+            var time = [];
+
+            for (var i = 0; i < jsonRoute.length - 1; i++) {
+                route.push([jsonRoute[i].x, jsonRoute[i].y]);
+                time.push(jsonRoute[i + 1].time - jsonRoute[i].time);
+            }
+            route.push([jsonRoute[route.length].x, jsonRoute[route.length].y]);
+
+            return [route, time];
+        }
+    }
+
+    function getCurrentTimeMilliSeconds() {
+        var currentDate = new Date();
+        var CurrentTimeSeconds = currentDate.getHours() * 3600 +
+            +currentDate.getMinutes() * 60 +
+            +currentDate.getSeconds();
+        return CurrentTimeSeconds * 1000;
+    }
+
+</script>
+</body>
+</html>
