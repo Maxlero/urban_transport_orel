@@ -1,39 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
 	<meta charset="UTF-8">
+	<meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 	<title>Add a new Route</title>
-
-	<!-- Leaflet -->
-	<!--ORIGIN-->    <!--NEW-->
-	<!--<link rel="stylesheet" th:href="@{/leaflet/leaflet.css}">-->
-	<link rel="stylesheet" th:href="@{/leaflet/leafletOLD.css}">
-	<!--NEW-->
-	<link rel="stylesheet" th:href="@{/leaflet/leaflet.draw.css}">
-	<!--MINE-->
-	<link rel="stylesheet" th:href="@{/css/index.css}">
-	<!--EasyButton-->
-	<link rel="stylesheet" th:href="@{/css/easy-button.css}">
-
-	<!--<link rel="stylesheet" href="css/leaflet.css">-->
-	<!--<link rel="stylesheet" href="css/leaflet.draw.css">-->
-
-	<!-- Make sure you put this AFTER Leaflet's CSS -->
-	<!--ORIGIN-->    <!--NEW-->
-	<!--<script type="text/javascript" th:src="@{/leaflet/leaflet.js}"></script>-->
-	<script type="text/javascript" th:src="@{/leaflet/leafletOLD.js}"></script>
-	<!--NEW-->
-	<script type="text/javascript" th:src="@{/leaflet/leaflet.draw.js}"></script>
-	<!--NEW-->
-	<script type="text/javascript" th:src="@{/leaflet/leaflet.geometryutil.js}"></script>
-	<!--NEW-->
-	<script type="text/javascript" th:src="@{/leaflet/leaflet.snap.js}"></script>
-
-	<!--<script src="js/leaflet.js"></script>-->
-	<!--<script src="js/leaflet.draw.js"></script>-->
-	<!--<script src="js/leaflet.geometryutil.js"></script>-->
-	<!--<script src="js/leaflet.snap.js"></script>-->
 
 	<!-- Bootstrap 4 -->
 	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-1/css/bootstrap.min.css"/>
@@ -44,146 +16,87 @@
 	<!--jQouery-->
 	<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 
+	<!-- Leaflet -->
+	<link rel="stylesheet" th:href="@{/leaflet/leafletOLD.css}">
+	<link rel="stylesheet" th:href="@{/leaflet/leaflet.draw.css}">
+
 	<!--EasyButton-->
-	<script type="text/javascript" th:src="@{/js/easy-button.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/easy-button.css}">
+
+	<!--TimePicker-->
+	<link rel="stylesheet" th:href="@{/timePicker/compiled.min.css}">
+
+	<!--MINE-->
+	<link rel="stylesheet" th:href="@{/css/index.css}">
+	<link rel="stylesheet" th:href="@{/css/main.css}">
 
 	<style>
 		.leaflet-control-attribution {
 			display: none !important;
 		}
+
+		.table td {
+			border-top: none !important;
+		}
+
+		.md-form .form-control {
+			margin: 0 !important;
+		}
 	</style>
+
+	<!-- Make sure you put this AFTER Leaflet's CSS -->
+	<script type="text/javascript" th:src="@{/leaflet/leafletOLD.js}"></script>
+	<script type="text/javascript" th:src="@{/leaflet/leaflet.draw.js}"></script>
+	<script type="text/javascript" th:src="@{/leaflet/leaflet.geometryutil.js}"></script>
+	<script type="text/javascript" th:src="@{/leaflet/leaflet.snap.js}"></script>
+
+	<!--EasyButton-->
+	<script type="text/javascript" th:src="@{/js/easy-button.js}"></script>
 </head>
+<body>
 
+<section id="ajaxContent">
+	<!-- Do not write code here. AutoFilling section! -->
+</section>
 
-<body class="leaflet-dragging">
-
-<div id="map" tabindex="0"></div>
-
-<!--NEW-->
+<!--Leaflet Draw-->
 <script type="text/javascript" th:src="@{/leaflet/Leaflet.Draw.Event.js}"></script>
-<!--<script src="./js/Leaflet.Draw.Event.js"></script>-->
+
+<!--TimePicker-->
+<script th:src="@{/timePicker/compiled.min.js}"></script>
 
 <script type="text/javascript">
+    var returnRoute = [];
+    var routeName = "";
 
-    // var markers = [];
-    // var routes = [];
-    var guideLayers = [];
-    var dimasikKarasik = [];
-
-    var map = L.map('map', {})
-        .setView([53.68115363918673, 23.83380889892578], 13)
-        .addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
-
-    drawnItems = L.featureGroup().addTo(map);
-    map.addControl(new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems
-        }
-    }));
-
-    map.on(L.Draw.Event.CREATED, function (event) {
-        var layer = event.layer;
-
-        dimasikKarasik.push(event.layer);
-
-        // console.log(dimasikKarasik);
-
-        dimasikKarasik.forEach(function (el) {
-            dimasikKarasik.forEach(function (value) {
-                if (el.snapediting !== undefined) {
-                    el.snapediting._guides = [];
-                    el.snapediting.addGuideLayer(value);
-                }
-            });
-        });
-
-        drawnItems.addLayer(layer);
-    });
-
-    map.on(L.Draw.Event.DELETED, function (e) {
-        // console.log(dimasikKarasik);
-
-        // console.log(e.layers._layers);
-
-        var temp = [];
-        dimasikKarasik.forEach(function (value) {
-            // console.log(value._leaflet_id);
-            // console.log(e.layers);
-
-            var fooo = true;
-
-            for (var a in e.layers._layers) {
-                if (value._leaflet_id === e.layers._layers[a]._leaflet_id) {
-                    fooo = false;
-                }
+    function initStartContent() {
+        var xHttp = new XMLHttpRequest();
+        xHttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                $("#ajaxContent").html(this.responseText);
             }
+        };
+        xHttp.open("GET", "/ajaxMap", true);
+        xHttp.send();
+    }
 
-            if (fooo) {
-                temp.push(value);
+    function initTimePage() {
+        var xHttp = new XMLHttpRequest();
+        xHttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                $("#ajaxContent").html(this.responseText);
             }
-        });
+        };
+        xHttp.open("GET", "/ajaxTime", true);
+        xHttp.send();
+    }
 
-        dimasikKarasik = temp;
+    initStartContent();
 
-        dimasikKarasik.forEach(function (el) {
-            dimasikKarasik.forEach(function (value) {
-                if (el.snapediting !== undefined) {
-                    el.snapediting._guides = [];
-                    el.snapediting.addGuideLayer(value);
-                }
-            });
-        });
-
-    });
-
-    map.on(L.Draw.Event.CREATED, function (e) {
-        // console.log(dimasikKarasik);
-        var layer = e.layer;
-        map.addLayer(layer);
-        guideLayers.push(layer);
-
-        // console.log($('.leaflet-marker-pane'));
-
-        if (e.layerType === "marker") {
-            // markers.push(layer);
-            // console.log(markers);
-
-            layer.snapediting = new L.Handler.MarkerSnap(map, layer);
-            layer.snapediting.enable();
-
-            for (var a in guideLayers) {
-                layer.snapediting.addGuideLayer(guideLayers[a]);
-            }
-        } else if (e.layerType === "polyline") {
-            // routes.push(layer);
-            // console.log(routes);
-
-            layer.options.fillOpacity = 1;
-            layer.options.opacity = 1;
-            layer.options.color = '#' + (function co(lor) {
-                return (lor += [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'][Math.floor(Math.random() * 16)]) && (lor.length === 6) ? lor : co(lor);
-            })('');
-
-            layer.snapediting = new L.Handler.PolylineSnap(map, layer);
-            layer.snapediting.enable();
-
-            // markers.forEach(function (el) {
-            //     dimasikKarasik.forEach(function (value) {
-            //         el.snapediting.addGuideLayer(value);
-            //     });
-            // });
-        }
-
-    });
-
-
-    L.easyButton('fas fa-check', function (btn, map) {
-        myFunction();
-    }).addTo(map);
-
-    function myFunction() {
-        // console.log(dimasikKarasik);
-        var returnRoute = [];
+    function showTable() {
+        console.log("showTable");
+        console.log(dimasikKarasik);
+        console.log("showTable");
 
         var temp_stops = [];
         for (var z = 0; z < dimasikKarasik.length; z++) {
@@ -234,49 +147,48 @@
                 break;
             }
         }
+        var last = returnRoute.length - 1;
+        returnRoute[last].stop = true;
+
         console.log(returnRoute);
-        searchText();
+
+        initTimePage();
     }
 
+    function send_post(routeName, returnRoute) {
 
-    function searchText() {
-        var search = JSON.stringify({
-            pName: "bhanu",
-            lName: "prasad"
+        console.log("send_post");
+        console.log(routeName);
+        console.log(returnRoute);
+        console.log("send_post");
+
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        // console.log(token);
+        // console.log(header);
+
+        var data = JSON.stringify({
+            _csrf: token,
+            name: routeName,
+            route: returnRoute
         });
 
         // Sending and receiving data in JSON format using POST method
         var xhr = new XMLHttpRequest();
 
         xhr.open("POST", "add", true);
+        xhr.setRequestHeader(header, token);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 console.log("what is that?");
             }
         };
-        xhr.send(search);
+        xhr.send(data);
     }
 
 
-    // $( document ).ready(function() {
-    //
-    // })
-
-
 </script>
-
-<!--<div th:unless="${authorized}">-->
-<!--<a href="/login" class="btn btn-info my-2 my-sm-0">Авторизоваться</a>-->
-<!--</div>-->
-
-<!--<div class="authenticated" th:if="${authorized}">-->
-<!--<div class="greeting">-->
-<!--<span th:text="${account.username}"></span>,-->
-<!--<span>hi!</span>-->
-<!--</div>-->
-<!--<a href="/logout" class="btn btn-danger my-2 my-sm-0">Выйти</a>-->
-<!--</div>-->
-
 </body>
 </html>

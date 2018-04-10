@@ -59,3 +59,6 @@ td, th {
 	margin-bottom: 0 !important;
 }
 
+#ajaxContent {
+	height: 100%;
+}

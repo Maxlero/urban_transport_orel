@@ -22,14 +22,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers(
 						"/",
+//						"/**",
+						"/ajaxMap",
+						"/ajaxTime",
 						"/registration",
 						"/routes",
 						"/add",
-						"/js/**",
+						"/postTest",
 						"/css/**",
-						"/img/**",
+						"/js/**",
 						"/leaflet/**",
+						"/timePicker/**",
 						"/Leaflet.Snap/**",
+						"/img/**",
 						"/webjars/**").permitAll()
 				.anyRequest().authenticated()
 				.and()

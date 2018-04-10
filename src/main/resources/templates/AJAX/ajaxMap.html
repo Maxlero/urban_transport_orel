@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax Map</title>
+</head>
+<body>
+<div id="map" tabindex="0"></div>
+<script th:inline="javascript">
+    // creates dimasikKarasik[] with json route
+    // calls showTable()
+
+    var guideLayers = [];
+    var dimasikKarasik = [];
+
+    var map = L.map('map', {})
+        .setView([53.68115363918673, 23.83380889892578], 13)
+        .addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
+
+    drawnItems = L.featureGroup().addTo(map);
+    map.addControl(new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    }));
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+
+        dimasikKarasik.push(event.layer);
+
+        // console.log(dimasikKarasik);
+
+        dimasikKarasik.forEach(function (el) {
+            dimasikKarasik.forEach(function (value) {
+                if (el.snapediting !== undefined) {
+                    el.snapediting._guides = [];
+                    el.snapediting.addGuideLayer(value);
+                }
+            });
+        });
+
+        drawnItems.addLayer(layer);
+    });
+
+    map.on(L.Draw.Event.DELETED, function (e) {
+        // console.log(dimasikKarasik);
+
+        // console.log(e.layers._layers);
+
+        var temp = [];
+        dimasikKarasik.forEach(function (value) {
+            // console.log(value._leaflet_id);
+            // console.log(e.layers);
+
+            var fooo = true;
+
+            for (var a in e.layers._layers) {
+                if (value._leaflet_id === e.layers._layers[a]._leaflet_id) {
+                    fooo = false;
+                }
+            }
+
+            if (fooo) {
+                temp.push(value);
+            }
+        });
+
+        dimasikKarasik = temp;
+
+        dimasikKarasik.forEach(function (el) {
+            dimasikKarasik.forEach(function (value) {
+                if (el.snapediting !== undefined) {
+                    el.snapediting._guides = [];
+                    el.snapediting.addGuideLayer(value);
+                }
+            });
+        });
+
+    });
+
+    map.on(L.Draw.Event.CREATED, function (e) {
+        // console.log(dimasikKarasik);
+        var layer = e.layer;
+        map.addLayer(layer);
+        guideLayers.push(layer);
+
+        // console.log($('.leaflet-marker-pane'));
+
+        if (e.layerType === "marker") {
+            // markers.push(layer);
+            // console.log(markers);
+
+            layer.snapediting = new L.Handler.MarkerSnap(map, layer);
+            layer.snapediting.enable();
+
+            for (var a in guideLayers) {
+                layer.snapediting.addGuideLayer(guideLayers[a]);
+            }
+        } else if (e.layerType === "polyline") {
+            // routes.push(layer);
+            // console.log(routes);
+
+            layer.options.fillOpacity = 1;
+            layer.options.opacity = 1;
+            layer.options.color = '#' + (function co(lor) {
+                return (lor += [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'][Math.floor(Math.random() * 16)]) && (lor.length === 6) ? lor : co(lor);
+            })('');
+
+            layer.snapediting = new L.Handler.PolylineSnap(map, layer);
+            layer.snapediting.enable();
+
+            // markers.forEach(function (el) {
+            //     dimasikKarasik.forEach(function (value) {
+            //         el.snapediting.addGuideLayer(value);
+            //     });
+            // });
+        }
+
+    });
+
+    L.easyButton('fas fa-check', function (btn, map) {
+        showTable();
+    }).addTo(map);
+</script>
+</body>
+</html>

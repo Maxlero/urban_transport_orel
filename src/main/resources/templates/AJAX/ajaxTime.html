@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax Time</title>
+</head>
+<body>
+<section id="routes">
+	<div class="route-table">
+		<div class="text-center text-uppercase form-group">TIME CONTROL PAGE</div>
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th scope="col" style="width: 50%">Stop number</th>
+				<th scope="col" style="width: 50%">Departure Time</th>
+			</tr>
+			</thead>
+			<tbody id="stops">
+			<!--AutoFilling section!-->
+			</tbody>
+		</table>
+	</div>
+</section>
+<script>
+
+    // var stop_number = returnRoute.length;
+    // console.log(returnRoute);
+    var stop_number = 0;
+    for (var s = 0; s < returnRoute.length; s++) {
+        if (returnRoute[s].stop === true) {
+            stop_number++;
+        }
+    }
+    // console.log(stop_number);
+
+    for (var i = 0; i < stop_number; i++) {
+        var stops =
+            '<tr>' +
+            '<td>' + i + '</td>' +
+            '<td>' +
+            '<div class="md-form">' +
+            '<input placeholder="Selecte time" type="text" id="input_endtime' + i + '"' +
+            'class="form-control timepicker" onfocus="changeBorderBottomColorOnFocus(this)">' +
+            '</div>' +
+            '</td>' +
+            '</tr>';
+
+        $('#stops').append(stops);
+    }
+
+    var nameAndButton =
+        '<tr>' +
+        '<td>' +
+        '<div class="md-form">' +
+        '<input placeholder="Name the Route" type="text" id="routeName" ' +
+        'class="form-control no-border" onfocus="changeBorderBottomColorOnFocus(this)">' +
+        '</div>' +
+        '</td>' +
+        '<td style="text-align: center;">' +
+        '<a type="text" class="btn btn-outline-success btn-md" onclick="checkFields()">Save Route</a>' +
+        '</td>' +
+        '</tr>';
+
+    $('#stops').append(nameAndButton);
+
+    for (var t = 0; t < stop_number; t++) {
+        $('#input_endtime' + t).pickatime({
+            // 12 or 24 hour
+            twelvehour: false,
+            // Light or Dark theme
+            darktheme: true
+        });
+    }
+
+
+    function checkFields() {
+        var temp_time = [];
+        var flag = true;
+        for (var i = 0; i < stop_number; i++) {
+            var field = document.getElementById("input_endtime" + i).value;
+
+            var hours = field.substr(0, 2);
+            var minutes = field.substr(3, 2);
+            // console.log(hours);
+            // console.log(minutes);
+
+            temp_time[i] = parseInt(hours, 10) * 3600 + parseInt(minutes, 10) * 60;
+
+            if (field === "") {
+                flag = false;
+                document.getElementById("input_endtime" + i).style.borderBottomColor = "red";
+            }
+        }
+
+        var routeName = document.getElementById("routeName").value;
+        if (routeName === "") {
+            flag = false;
+            document.getElementById("routeName").style.borderBottomColor = "red";
+        }
+
+        // check if all fields are set
+        if (flag) {
+            alert("ok");
+            console.log(temp_time);
+
+            // setting time
+			var counter = 0;
+            for (var s = 0; s < returnRoute.length; s++) {
+                if (returnRoute[s].stop === true) {
+                    returnRoute[s].time = temp_time[counter];
+                    counter++;
+                }
+            }
+            console.log(returnRoute);
+
+            send_post(routeName, returnRoute);
+        }
+    }
+
+    function changeBorderBottomColorOnFocus(id) {
+        document.getElementById(id.id).style.borderBottomColor = "#ced4da";
+    }
+</script>
+</body>
+</html>
