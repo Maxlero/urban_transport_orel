@@ -63,12 +63,17 @@
         // console.log("yes");
         for (var i = 0; i < routes.length; i++) {
             // console.log(routes[i].name);
-            if (routes[i].name === "do not delete") {
-                // console.log(routes[i].route);
-                var obj = JSON.parse(routes[i].route);
-                // console.log(obj);
-                showRoute(obj);
-            }
+            // if (routes[i].name === "do not delete") {
+            //     console.log(routes[i].route);
+            //     var obj = JSON.parse(routes[i].route);
+            //     console.log(obj);
+            //     showRoute(obj);
+            // }
+
+            // console.log(routes[i].route);
+            var obj = JSON.parse(routes[i].route);
+            // console.log(obj);
+            showRoute(obj);
         }
     }
 
@@ -96,10 +101,10 @@
             route.forEach(function (element, i) {
                 if (element.stop && i !== 0) {
                     returnRoute.push({
-                        "time": element.time - stop_time,
-                        "stop": element.stop,
-                        "x": element.x,
-                        "y": element.y
+                        time: element.time - stop_time,
+                        stop: element.stop,
+                        x: element.x,
+                        y: element.y
                     });
                     returnRoute.push(element);
                 } else {
@@ -135,10 +140,10 @@
                             // console.log(y);
 
                             returnRoute.push({
-                                "time": time,
-                                "stop": false,
-                                "x": x,
-                                "y": y
+                                time: time,
+                                stop: false,
+                                x: x,
+                                y: y
                             });
                         }
                     }
