@@ -26,7 +26,7 @@
 
     /*<![CDATA[*/
     var routes = /*[[${routes}]]*/ 'false';
-    // console.log(routes);
+    console.log(routes);
     /*]]>*/
 
     /*<![CDATA[*/
@@ -50,12 +50,13 @@
 
     // GLOBAL CONST
     var stop_time = 4000;
+    // var stop_time = 4;
 
     // REAL TIME
     var t = getCurrentTimeMilliSeconds();
-    // console.log(t);
+    console.log(t);
     // debug
-    t = 38258000;
+    // t = 38258000;
     // console.log(t);
 
     if (routes) {
@@ -176,6 +177,7 @@
             +currentDate.getMinutes() * 60 +
             +currentDate.getSeconds();
         return CurrentTimeSeconds * 1000;
+        // return CurrentTimeSeconds;
     }
 
     // /*<![CDATA[*/

@@ -2,17 +2,14 @@ package by.grsu.orel.controller;
 
 import by.grsu.orel.Starter;
 import by.grsu.orel.model.Routes;
-import by.grsu.orel.model.Search;
 import by.grsu.orel.repository.RouteRepository;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Console;
 import java.util.Map;
 
 @Controller
@@ -29,24 +26,19 @@ public class AddController {
 	@ResponseBody
 	public String handleJsonPostRequest(@RequestBody Map<String, Object> payload) {
 		try {
-			logger.info(payload.get("route"));
-			logger.info(payload.get("name"));
+//			logger.info(payload.get("route"));
+//			logger.info(payload.get("name"));
+			Routes route = new Routes();
+			route.setName(payload.get("name").toString());
+			route.setRoute(payload.get("route").toString());
+//			logger.info(route.toString());
 
-			return "ok";
+			routeRepository.save(route);
+			return "route saved";
 		} catch (Exception e) {
-			return "suqua";
+			return "route didn't save";
 		}
 	}
-//	@PostMapping
-//	public String receivePost(@RequestBody Search search) {
-//
-//		String pName = search.getpName();
-//		String lName = search.getlName();
-//
-//		logger.info(pName);
-//		logger.info(lName);
-//		return "add";
-//	}
 
 	@GetMapping
 	public String start(Model model) {

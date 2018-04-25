@@ -171,7 +171,7 @@
         var data = JSON.stringify({
             _csrf: token,
             name: routeName,
-            route: returnRoute
+            route: JSON.stringify(returnRoute)
         });
 
         // Sending and receiving data in JSON format using POST method
