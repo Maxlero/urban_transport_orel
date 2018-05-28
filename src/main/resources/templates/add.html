@@ -65,12 +65,12 @@
 <!--TimePicker-->
 <script th:src="@{/timePicker/compiled.min.js}"></script>
 
-<script type="text/javascript">
-    var returnRoute = [];
-    var routeName = "";
+<script th:inline="javascript">
+    let returnRoute = [];
+    let routeName = "";
 
     function initStartContent() {
-        var xHttp = new XMLHttpRequest();
+        let xHttp = new XMLHttpRequest();
         xHttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 $("#ajaxContent").html(this.responseText);
@@ -81,7 +81,7 @@
     }
 
     function initTimePage() {
-        var xHttp = new XMLHttpRequest();
+        let xHttp = new XMLHttpRequest();
         xHttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 $("#ajaxContent").html(this.responseText);
@@ -98,15 +98,15 @@
         console.log(dimasikKarasik);
         console.log("showTable");
 
-        var temp_stops = [];
-        for (var z = 0; z < dimasikKarasik.length; z++) {
+        let temp_stops = [];
+        for (let z = 0; z < dimasikKarasik.length; z++) {
             if (dimasikKarasik[z]._latlng) {
                 temp_stops.push([dimasikKarasik[z]._latlng.lat, dimasikKarasik[z]._latlng.lng]);
             }
         }
         // console.log(temp_stops);
 
-        for (var i = 0; i < dimasikKarasik.length; i++) {
+        for (let i = 0; i < dimasikKarasik.length; i++) {
             if (dimasikKarasik[i]._latlngs) {
                 dimasikKarasik[i]._latlngs.forEach(function (element, j) {
                         if (j === 0) {
@@ -117,9 +117,9 @@
                                 "y": element.lng
                             });
                         } else {
-                            var singFromTheSky = false;
+                            let singFromTheSky = false;
 
-                            for (var k = 0; k < temp_stops.length; k++) {
+                            for (let k = 0; k < temp_stops.length; k++) {
                                 if (temp_stops[k][0] === element.lat && temp_stops[k][1] === element.lng) {
                                     singFromTheSky = true;
                                     returnRoute.push({
@@ -147,7 +147,7 @@
                 break;
             }
         }
-        var last = returnRoute.length - 1;
+        let last = returnRoute.length - 1;
         returnRoute[last].stop = true;
 
         console.log(returnRoute);
@@ -162,13 +162,13 @@
         console.log(returnRoute);
         console.log("send_post");
 
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
 
         // console.log(token);
         // console.log(header);
 
-        var data = JSON.stringify({
+        let data = JSON.stringify({
             _csrf: token,
             name: routeName,
             route: JSON.stringify(returnRoute)
@@ -176,15 +176,21 @@
         });
 
         // Sending and receiving data in JSON format using POST method
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
 
         xhr.open("POST", "add", true);
         xhr.setRequestHeader(header, token);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log("what is that?");
-            }
+                console.log("post successful!");
+                url_str = document.URL;
+                let str2 = url_str.slice(0, -3);
+                console.log(str2);
+                window.location.href = str2;
+            } else {
+                console.log("bad post!");
+			}
         };
         xhr.send(data);
     }

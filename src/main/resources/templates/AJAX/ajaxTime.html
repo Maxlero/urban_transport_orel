@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>Ajax Time</title>
+    <meta charset="UTF-8">
+    <title>Ajax Time</title>
 </head>
 <body>
 <section id="routes">
-	<div class="route-table">
-		<div class="text-center text-uppercase form-group">TIME CONTROL PAGE</div>
-		<table class="table table-hover">
-			<thead>
-			<tr>
-				<th scope="col" style="width: 50%">Stop number</th>
-				<th scope="col" style="width: 50%">Departure Time</th>
-			</tr>
-			</thead>
-			<tbody id="stops">
-			<!--AutoFilling section!-->
-			</tbody>
-		</table>
-	</div>
+    <div class="route-table">
+        <div class="text-center text-uppercase form-group">TIME CONTROL PAGE</div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 50%">Stop number</th>
+                <th scope="col" style="width: 50%">Departure Time</th>
+            </tr>
+            </thead>
+            <tbody id="stops">
+            <!--AutoFilling section!-->
+            </tbody>
+        </table>
+    </div>
 </section>
-<script>
+<script th:inline="javascript">
+    // we choose time here
+    // calls send_post()
 
-    // var stop_number = returnRoute.length;
+    // let stop_number = returnRoute.length;
     // console.log(returnRoute);
-    var stop_number = 0;
-    for (var s = 0; s < returnRoute.length; s++) {
+    let stop_number = 0;
+    for (let s = 0; s < returnRoute.length; s++) {
         if (returnRoute[s].stop === true) {
             stop_number++;
         }
     }
     // console.log(stop_number);
 
-    for (var i = 0; i < stop_number; i++) {
-        var stops =
+    for (let i = 0; i < stop_number; i++) {
+        let stops =
             '<tr>' +
             '<td>' + i + '</td>' +
             '<td>' +
@@ -48,7 +50,7 @@
         $('#stops').append(stops);
     }
 
-    var nameAndButton =
+    let nameAndButton =
         '<tr>' +
         '<td>' +
         '<div class="md-form">' +
@@ -63,7 +65,8 @@
 
     $('#stops').append(nameAndButton);
 
-    for (var t = 0; t < stop_number; t++) {
+    // creating timePickers
+    for (let t = 0; t < stop_number; t++) {
         $('#input_endtime' + t).pickatime({
             // 12 or 24 hour
             twelvehour: false,
@@ -74,13 +77,13 @@
 
 
     function checkFields() {
-        var temp_time = [];
-        var flag = true;
-        for (var i = 0; i < stop_number; i++) {
-            var field = document.getElementById("input_endtime" + i).value;
+        let temp_time = [];
+        let flag = true;
+        for (let i = 0; i < stop_number; i++) {
+            let field = document.getElementById("input_endtime" + i).value;
 
-            var hours = field.substr(0, 2);
-            var minutes = field.substr(3, 2);
+            let hours = field.substr(0, 2);
+            let minutes = field.substr(3, 2);
             // console.log(hours);
             // console.log(minutes);
 
@@ -92,7 +95,7 @@
             }
         }
 
-        var routeName = document.getElementById("routeName").value;
+        let routeName = document.getElementById("routeName").value;
         if (routeName === "") {
             flag = false;
             document.getElementById("routeName").style.borderBottomColor = "red";
@@ -100,12 +103,12 @@
 
         // check if all fields are set
         if (flag) {
-            alert("ok");
+            // alert("ok");
             console.log(temp_time);
 
             // setting time
-            var counter = 0;
-            for (var s = 0; s < returnRoute.length; s++) {
+            let counter = 0;
+            for (let s = 0; s < returnRoute.length; s++) {
                 if (returnRoute[s].stop === true) {
                     returnRoute[s].time = temp_time[counter] * 1000;
                     // returnRoute[s].time = temp_time[counter];
@@ -114,7 +117,40 @@
             }
             console.log(returnRoute);
 
-            send_post(routeName, returnRoute);
+            console.log("new edge");
+            let new_return_route = [];
+            // add time stamps on none stop points
+            for (let k = 0; k < returnRoute.length; k++) {
+                if (returnRoute[k].stop === false) {
+                    let start_time = returnRoute[k - 1].time;
+
+                    let distance_till_next_stop = 0;
+                    // Math.abs(-7.25);
+                    // Math.sqrt(16);
+                    distance_till_next_stop += Math.sqrt(Math.pow(returnRoute[k - 1].x - returnRoute[k].x, 2) + Math.pow(returnRoute[k - 1].y - returnRoute[k].y, 2));
+                    let current_point_dist = distance_till_next_stop;
+
+                    let temp = k;
+                    while (returnRoute[temp + 1].stop === false) {
+                        distance_till_next_stop += Math.sqrt(Math.pow(returnRoute[temp].x - returnRoute[temp + 1].x, 2) + Math.pow(returnRoute[temp].y - returnRoute[temp + 1].y, 2));
+                        temp += 1;
+                    }
+                    distance_till_next_stop += Math.sqrt(Math.pow(returnRoute[temp].x - returnRoute[temp + 1].x, 2) + Math.pow(returnRoute[temp].y - returnRoute[temp + 1].y, 2));
+
+                    let finish_time = returnRoute[temp + 1].time;
+
+                    let dif_time = finish_time - start_time;
+
+                    returnRoute[k].time = Math.round(dif_time / distance_till_next_stop * current_point_dist) + start_time;
+
+                    new_return_route.push(returnRoute[k]);
+                } else {
+                    new_return_route.push(returnRoute[k]);
+                }
+            }
+            console.log(new_return_route);
+
+            send_post(routeName, new_return_route);
         }
     }
 

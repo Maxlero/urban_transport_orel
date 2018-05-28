@@ -31,11 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						"/postTest",
 						"/css/**",
 						"/js/**",
+						"/font/**",
 						"/leaflet/**",
 						"/timePicker/**",
 						"/Leaflet.Snap/**",
 						"/img/**",
 						"/webjars/**").permitAll()
+//				.antMatchers(
+//						"/admin/**"
+//				).hasAuthority("ROLE_ADMIN")
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()

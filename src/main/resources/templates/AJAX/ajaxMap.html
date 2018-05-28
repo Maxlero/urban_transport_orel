@@ -10,10 +10,10 @@
     // creates dimasikKarasik[] with json route
     // calls showTable()
 
-    var guideLayers = [];
-    var dimasikKarasik = [];
+    let guideLayers = [];
+    let dimasikKarasik = [];
 
-    var map = L.map('map', {})
+    let map = L.map('map', {})
         .setView([53.68115363918673, 23.83380889892578], 13)
         .addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
 
@@ -25,7 +25,7 @@
     }));
 
     map.on(L.Draw.Event.CREATED, function (event) {
-        var layer = event.layer;
+        let layer = event.layer;
 
         dimasikKarasik.push(event.layer);
 
@@ -48,14 +48,14 @@
 
         // console.log(e.layers._layers);
 
-        var temp = [];
+        let temp = [];
         dimasikKarasik.forEach(function (value) {
             // console.log(value._leaflet_id);
             // console.log(e.layers);
 
-            var fooo = true;
+            let fooo = true;
 
-            for (var a in e.layers._layers) {
+            for (let a in e.layers._layers) {
                 if (value._leaflet_id === e.layers._layers[a]._leaflet_id) {
                     fooo = false;
                 }
@@ -81,7 +81,7 @@
 
     map.on(L.Draw.Event.CREATED, function (e) {
         // console.log(dimasikKarasik);
-        var layer = e.layer;
+        let layer = e.layer;
         map.addLayer(layer);
         guideLayers.push(layer);
 
@@ -94,7 +94,7 @@
             layer.snapediting = new L.Handler.MarkerSnap(map, layer);
             layer.snapediting.enable();
 
-            for (var a in guideLayers) {
+            for (let a in guideLayers) {
                 layer.snapediting.addGuideLayer(guideLayers[a]);
             }
         } else if (e.layerType === "polyline") {
