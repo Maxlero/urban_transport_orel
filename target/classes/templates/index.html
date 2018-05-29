@@ -50,7 +50,13 @@
             attribution: [Links],
             maxZoom: 18
         }).addTo(map);
-
+    // create stop icon
+    let stopIcon = L.icon({
+        iconUrl: "/leaflet/images/stop3.png",
+        iconSize:     [28, 28], // size of the icon
+        iconAnchor:   [14, 28], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -28] // point from which the popup should open relative to the iconAnchor
+    });
 
     // GLOBAL CONST
     let stop_time = 4000;
@@ -95,9 +101,11 @@
             let marker1 = L.Marker.movingMarker(final_route, final_time).addTo(map);
 
             // add route name
-            marker1.bindPopup("Bus: " + name).openPopup();
+            marker1.bindPopup("Bus: " + name);
+            // marker1.bindPopup("Bus: " + name).openPopup();
 
-            // TODO delete route after compliting its work
+            // TODO delete route after completing its work
+
         } else {
             if (route[0].time > t) {
                 console.log("Creating delay function for route " + name);
@@ -112,6 +120,12 @@
         function addPausesToRoute(route) {
             let returnRoute = [];
             route.forEach(function (element, i) {
+                // add stop icons to the map
+                if (element.stop){
+                    let stopic = L.marker([element.x, element.y], {icon: stopIcon}).addTo(map);
+                    stopic.bindPopup("I'm a stop");
+                }
+
                 if (element.stop && i !== 0) {
                     returnRoute.push({
                         time: element.time - stop_time,
@@ -119,6 +133,7 @@
                         x: element.x,
                         y: element.y
                     });
+
                     returnRoute.push(element);
                 } else {
                     returnRoute.push(element);
