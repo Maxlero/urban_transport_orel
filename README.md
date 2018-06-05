@@ -1,12 +1,15 @@
 # Urban transport
 Powered by **Orel Maksim**
 
-Task
-----
-> Система Городской транспорт. На Маршрут назначаются Автобус, Троллейбус или Трамвай. Транспортные средства должны двигаться с определенным для каждого Маршрута интервалом или расписанием.
+[![License: Apache 2.0](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Maxlero/urban_transport_orel/blob/master/LICENSE.md)
 
-Tech
-----
+![Peek recording itself](https://github.com/Maxlero/urban_transport_orel/blob/master/screenshots/Screencast.gif)
+Simple screen recorder with an easy to use interface
+
+## Task
+Система Городской транспорт. На Маршрут назначаются Автобус, Троллейбус или Трамвай. Транспортные средства должны двигаться с определенным для каждого Маршрута интервалом или расписанием.
+
+## Tech
 
 Urban transport uses a number of open source projects to work properly:
 
@@ -21,8 +24,7 @@ Urban transport uses a number of open source projects to work properly:
 * [Font Awesome 5] - Symbolic fonts for sites.
 * [jQuery] - JavaScript Library. Everybody knows it.
 
-License
-----
+## License
 
 Apache Licence v2
 
