@@ -4,7 +4,7 @@ Powered by **Orel Maksim**
 [![License: Apache 2.0](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Maxlero/urban_transport_orel/blob/master/LICENSE.md)
 
 ![Peek recording itself](https://github.com/Maxlero/urban_transport_orel/blob/master/screenshots/Screencast.gif)
-Simple screen recorder with an easy to use interface
+Simple creation of a new route.
 
 ## Task
 Система Городской транспорт. На Маршрут назначаются Автобус, Троллейбус или Трамвай. Транспортные средства должны двигаться с определенным для каждого Маршрута интервалом или расписанием.
