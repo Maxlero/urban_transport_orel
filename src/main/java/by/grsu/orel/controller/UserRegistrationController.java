@@ -14,38 +14,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+/**
+ * Controller for `/registration` page
+ */
 @Controller
 @RequestMapping("/registration")
 public class UserRegistrationController {
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@ModelAttribute("user")
-	public UserRegistrationDto userRegistrationDto() {
-		return new UserRegistrationDto();
-	}
+    @ModelAttribute("user")
+    public UserRegistrationDto userRegistrationDto() {
+        return new UserRegistrationDto();
+    }
 
-	@GetMapping
-	public String showRegistrationForm(Model model) {
-		return "registration";
-	}
+    @GetMapping
+    public String showRegistrationForm(Model model) {
+        return "registration";
+    }
 
-	@PostMapping
-	public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
-									  BindingResult result) {
+    @PostMapping
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
+                                      BindingResult result) {
 
-		User existing = userService.findByUsername(userDto.getUsername());
-		if (existing != null) {
-			result.rejectValue("username", null, "That username is taken. Try another.");
-		}
+        User existing = userService.findByUsername(userDto.getUsername());
+        if (existing != null) {
+            result.rejectValue("username", null, "That username is taken. Try another.");
+        }
 
-		if (result.hasErrors()) {
-			return "registration";
-		}
+        if (result.hasErrors()) {
+            return "registration";
+        }
 
-		userService.save(userDto);
-		return "redirect:/registration?success";
-	}
+        userService.save(userDto);
+        return "redirect:/registration?success";
+    }
 
 }

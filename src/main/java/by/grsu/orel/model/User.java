@@ -3,6 +3,9 @@ package by.grsu.orel.model;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * `user` Table model
+ */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {

@@ -5,6 +5,9 @@ import by.grsu.orel.constraint.FieldMatch;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Registration data transfer oject for `user` table interaction
+ */
 @FieldMatch.List({
         @FieldMatch(first = "password", second = "confirmPassword", message = "Пароли не совпадают"),
 })
